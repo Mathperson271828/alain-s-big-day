@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Alain Turns 21</title>
+  <meta name="description" content="Leave Alain Soto a birthday note and your best photos together. Only Alain sees the final wall.">
+  <meta name="theme-color" content="#f7f2e8">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Caveat:wght@500;700&display=swap">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="wrap bar">
+    <a class="mark" href="/"><span class="dot">21</span> Alain's Special Day</a>
+    <span class="chip">November 1</span>
+  </header>
+
+  <main>
+    <section class="wrap hero">
+      <div class="hero-art" aria-hidden="true">
+        <figure class="polaroid p1"><div class="ph">21</div><figcaption>birthday boy</figcaption></figure>
+        <div class="note n1">Happy birthday, Alain!!<span class="from">everyone</span></div>
+        <div class="note n2">you make Duke feel like home</div>
+      </div>
+      <p class="eyebrow">Shh — it's a surprise wall</p>
+      <h1 class="mega">Alain<br>turns <span class="num">21</span><span class="scribble">!!</span></h1>
+      <p class="ticker" aria-live="polite">The friend who <span class="swap" id="swap">makes everyone feel seen</span>.</p>
+      <p class="lede">Write him a note and drop in your best photos together. Everything lands on one big wall that <b>only Alain</b> gets to open.</p>
+      <p class="cta"><a class="btn blue" href="#write">Write to Alain ↓</a></p>
+    </section>
+
+    <div class="marquee" aria-hidden="true">
+      <div class="track">
+        <span>Duke ECE</span><span>People connector</span><span>Fears God</span><span>Friend of everyone at WU</span><span>Bus-driver bestie</span><span>Professional introducer</span><span>Always the bright side</span><span>Laugh you can hear across the quad</span>
+        <span>Duke ECE</span><span>People connector</span><span>Fears God</span><span>Friend of everyone at WU</span><span>Bus-driver bestie</span><span>Professional introducer</span><span>Always the bright side</span><span>Laugh you can hear across the quad</span>
+      </div>
+    </div>
+
+    <section class="wrap section" id="write">
+      <div id="composeView">
+        <h2 class="h2 reveal">Write him something.</h2>
+        <p class="sub reveal">A memory, an inside joke, a prayer, a thank-you. It lands on his wall in handwriting.</p>
+
+        <form class="compose" id="form" novalidate>
+          <div>
+            <label class="field">
+              <span class="label">Your name</span>
+              <input class="input" id="name" name="name" maxlength="60" autocomplete="name" placeholder="e.g. Leo" required>
+            </label>
+
+            <label class="field tight">
+              <span class="label">Your note to Alain</span>
+              <textarea class="textarea" id="message" name="message" maxlength="3000" placeholder="Happy 21st, Alain!…"></textarea>
+              <div class="counter"><span id="count">0</span> / 3000</div>
+            </label>
+            <div class="sparks" aria-label="Need a spark?">
+              <button type="button" class="spark" data-text="The first time we met, ">First time we met…</button>
+              <button type="button" class="spark" data-text="Thank you for introducing me to ">You introduced me to…</button>
+              <button type="button" class="spark" data-text="The funniest thing you ever said was ">Funniest moment…</button>
+              <button type="button" class="spark" data-text="You made me feel seen when ">You made me feel seen…</button>
+              <button type="button" class="spark" data-text="My prayer for you this year is ">A prayer for your year…</button>
+            </div>
+
+            <div class="field">
+              <span class="label">Photos with Alain <small>up to 8 · optional</small></span>
+              <label class="drop" id="drop">
+                <span class="big" aria-hidden="true">📸</span>
+                <strong>Drop photos here</strong>
+                <span>or tap to pick from your camera roll</span>
+                <input type="file" id="files" accept="image/*" multiple hidden>
+              </label>
+              <div class="thumbs" id="thumbs"></div>
+            </div>
+
+            <label class="field" id="codeField" hidden>
+              <span class="label">Birthday code <small>from the group chat</small></span>
+              <input class="input" id="code" autocomplete="off" maxlength="100">
+            </label>
+
+            <div class="hp" aria-hidden="true"><label>Website <input id="website" tabindex="-1" autocomplete="off"></label></div>
+
+            <button class="btn" id="send" type="submit">Send it to Alain <span aria-hidden="true">→</span></button>
+            <p class="status" id="status" role="status"></p>
+          </div>
+
+          <aside class="preview-wrap">
+            <p class="preview-label">How Alain will see it</p>
+            <div class="note empty tilt-r" id="preview">Happy 21st, Alain!…<span class="from" id="previewFrom">you</span></div>
+            <div class="lock"><span aria-hidden="true">🔒</span><span><b>Only Alain sees the wall.</b> You can add to it, but nobody else can read what you wrote.</span></div>
+          </aside>
+        </form>
+      </div>
+
+      <div class="done" id="doneView" hidden>
+        <h2 class="mega">Sent<span class="scribble">!</span></h2>
+        <p>It's on Alain's wall now. Thank you for loving him well. 💙</p>
+        <button class="btn ghost" id="again" type="button">Add another note or photos</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap">
+    <span>Made with love by Alain's friends · Happy 21st</span>
+    <a href="/host">Are you Alain? Open your wall →</a>
+  </footer>
+
+  <script src="/submit.js" type="module"></script>
+</body>
+</html>
