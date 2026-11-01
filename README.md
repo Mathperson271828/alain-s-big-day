@@ -46,3 +46,7 @@ If you created a *public* Blob store by mistake, also set `BLOB_ACCESS=public`. 
 | `api/index.js` | Vercel entry point |
 
 API: `POST /api/photo` (raw image, ≤4 MB, checked by file signature) → `{ref}`; `POST /api/submit` `{name, message, photos[], code?}`; `POST /api/host/login`; `GET /api/host/wall`; `DELETE /api/host/entry/:id`; `GET /media/:name` (host only).
+
+## Changing settings later
+
+Vercel only applies environment variable changes (like `HOST_PASSWORD` or `SUBMIT_CODE`) to new deploys. After changing one, either push any commit to `main` or click **Deployments → ⋯ → Redeploy** in Vercel.
