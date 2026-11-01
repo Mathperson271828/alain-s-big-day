@@ -194,7 +194,10 @@ export function createHandler(opts = {}) {
     try { await route(req, res); }
     catch (err) {
       if (!err.status) console.error(err);
-      const msg = err.status === 413 ? 'That photo is too big even after shrinking. Try another one.' : err.status ? 'Bad request.' : 'Something went wrong. Please try again.';
+      let msg = err.status === 413 ? 'That photo is too big even after shrinking. Try another one.' : err.status ? 'Bad request.' : 'Something went wrong. Please try again.';
+      // Setup problems are worth showing to anyone; full details only to the logged-in host.
+      if (!err.status && /^Photo storage/.test(err.message)) msg = err.message;
+      else if (!err.status && isHost(req)) msg = `Something went wrong: ${err.message}`;
       if (!res.headersSent) send(res, err.status || 500, { error: msg });
       else res.end();
     }

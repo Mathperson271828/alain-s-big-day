@@ -11,7 +11,7 @@ const JPEG = Buffer.concat([Buffer.from([0xff, 0xd8, 0xff, 0xe0]), Buffer.alloc(
 let server, base, dir;
 
 async function start(opts) {
-  const { handler } = createHandler({ storage: createStorage({ blobToken: '', dataDir: dir }), hostPassword: 'happy21', ...opts });
+  const { handler } = createHandler({ storage: createStorage({ useBlob: false, dataDir: dir }), hostPassword: 'happy21', ...opts });
   const s = http.createServer(handler);
   await new Promise((r) => s.listen(0, r));
   return { s, base: `http://127.0.0.1:${s.address().port}` };

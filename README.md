@@ -25,14 +25,16 @@ Locally, everything is saved in `./data`.
 ## Deploy for free on Vercel (about 10 minutes)
 
 1. Push this repo to GitHub, then on [vercel.com](https://vercel.com) choose **Add New → Project** and import it. Leave all build settings as they are.
-2. In the project, open **Storage → Create → Blob**, choose **Private** access, and connect it to the project. This adds `BLOB_READ_WRITE_TOKEN` automatically.
+2. In the project, open **Storage → Create → Blob**, choose **Private** access, and connect it to the project. Vercel adds the storage credentials automatically (`BLOB_READ_WRITE_TOKEN`, or `BLOB_STORE_ID` on newer stores). Both work.
 3. In **Settings → Environment Variables**, add:
    - `HOST_PASSWORD`: the password you'll give Alain.
    - `SUBMIT_CODE` (optional): a code friends must type to submit, e.g. `WU`. Share it in the group chat with the link so random people can't post.
 4. **Redeploy** (Deployments → ⋯ → Redeploy) so the variables take effect.
 5. Send friends the main link. Send Alain `<your-link>/host` and the password.
 
-If you created a *public* Blob store by mistake, also set `BLOB_ACCESS=public`. Blob names are random, so they still can't be guessed.
+If you created a *public* Blob store instead, the app detects that and uses it anyway. Blob names are random, so they still can't be guessed.
+
+If the wall shows "Photo storage is not connected", open **Storage** in Vercel, make sure the Blob store is connected to this project (for Production), then redeploy.
 
 ## How it's built
 
