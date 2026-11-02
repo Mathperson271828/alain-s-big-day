@@ -86,6 +86,12 @@ async function load() {
   }
   items = interleave(shuffle(items));
   render();
+
+  if (!filmChecked) {
+    filmChecked = true;
+    filmInfo = await api('/api/host/film').catch(() => null);
+    if (filmInfo?.url) { $('#rewatch').hidden = false; openFilm(); }
+  }
 }
 
 // Spread things out so two cards from the same friend rarely sit side by side.
@@ -289,6 +295,115 @@ $('#lbHide').addEventListener('click', async () => {
     render();
     show(Math.min(current, visible.length - 1));
   } catch (err) { alert(err.message); }
+});
+
+// ---------------- "the friend who…" ticker ----------------
+const LINES = [
+  'makes everyone feel seen',
+  'turns strangers into friends',
+  'introduces everyone to everyone',
+  'always finds the bright side',
+  'keeps God first',
+  'makes the whole room laugh',
+  'makes you feel at home',
+  'knows the WU staff by name',
+];
+{
+  const swap = $('#swap');
+  let li = 0;
+  if (!reduceMotion) {
+    setInterval(() => {
+      swap.classList.add('out');
+      setTimeout(() => { li = (li + 1) % LINES.length; swap.textContent = LINES[li]; swap.classList.remove('out'); }, 350);
+    }, 2600);
+  }
+}
+
+// ---------------- the birthday film ----------------
+// The video is stored AES-GCM encrypted (12-byte IV + ciphertext) as a static file; only the
+// logged-in host receives the key from /api/host/film, and the browser decrypts it here.
+let filmChecked = false;
+let filmInfo = null;
+let filmURL = null;
+let filmSeen = false;
+const film = $('#film');
+const video = $('#filmVideo');
+const b64 = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
+
+async function fetchFilm() {
+  if (filmURL) return filmURL;
+  const res = await fetch(filmInfo.url, { cache: 'force-cache' });
+  if (!res.ok || !res.body) throw new Error('video download failed');
+  const total = Number(res.headers.get('content-length')) || 0;
+  const reader = res.body.getReader();
+  const chunks = [];
+  let got = 0;
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    chunks.push(value);
+    got += value.length;
+    if (total) $('#filmBar').style.width = `${Math.min(100, (got / total) * 100)}%`;
+  }
+  const buf = new Uint8Array(got);
+  let o = 0;
+  for (const c of chunks) { buf.set(c, o); o += c.length; }
+  const key = await crypto.subtle.importKey('raw', b64(filmInfo.key), 'AES-GCM', false, ['decrypt']);
+  const plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: buf.subarray(0, 12) }, key, buf.subarray(12));
+  filmURL = URL.createObjectURL(new Blob([plain], { type: 'video/mp4' }));
+  return filmURL;
+}
+
+async function openFilm() {
+  film.hidden = false;
+  document.body.classList.add('film-open');
+  $('#filmCover').hidden = false;
+  $('#filmEnd').hidden = true;
+  $('#filmSkip').hidden = false;
+  const btn = $('#filmPlay');
+  btn.disabled = true;
+  $('#filmPlayLabel').textContent = 'Loading your video…';
+  try {
+    const url = await fetchFilm();
+    if (video.src !== url) video.src = url;
+    $('#filmBar').style.width = '100%';
+    btn.disabled = false;
+    $('#filmPlayLabel').textContent = filmSeen ? 'Play it again' : 'Play your birthday video';
+    btn.focus();
+  } catch {
+    $('#filmPlayLabel').textContent = 'The video could not load';
+  }
+}
+
+function playFilm() {
+  $('#filmCover').hidden = true;
+  $('#filmEnd').hidden = true;
+  video.currentTime = 0;
+  video.play().catch(() => { $('#filmCover').hidden = false; });
+}
+
+function closeFilm() {
+  video.pause();
+  film.hidden = true;
+  document.body.classList.remove('film-open');
+  if (!filmSeen) {
+    filmSeen = true;
+    scrollTo({ top: 0 });
+    setTimeout(confetti, 200);
+  }
+}
+
+$('#filmPlay').addEventListener('click', playFilm);
+$('#filmAgain').addEventListener('click', playFilm);
+$('#filmOpen').addEventListener('click', closeFilm);
+$('#filmSkip').addEventListener('click', closeFilm);
+$('#rewatch').addEventListener('click', openFilm);
+video.addEventListener('ended', () => { $('#filmEnd').hidden = false; $('#filmOpen').focus(); });
+video.addEventListener('click', () => (video.paused ? video.play() : video.pause()));
+document.addEventListener('keydown', (e) => {
+  if (film.hidden) return;
+  if (e.key === 'Escape') closeFilm();
+  else if (e.key === ' ' && $('#filmCover').hidden && $('#filmEnd').hidden) { e.preventDefault(); video.paused ? video.play() : video.pause(); }
 });
 
 // ---------------- confetti ----------------

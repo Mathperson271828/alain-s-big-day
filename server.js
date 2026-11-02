@@ -20,6 +20,7 @@ const STATIC = {
   '/submit.js': ['submit.js', 'text/javascript; charset=utf-8'],
   '/host.js': ['host.js', 'text/javascript; charset=utf-8'],
   '/favicon.svg': ['favicon.svg', 'image/svg+xml'],
+  '/film/alain-21.bin': ['film/alain-21.bin', 'application/octet-stream'],
 };
 
 export const SECURITY_HEADERS = {
@@ -32,6 +33,7 @@ export const SECURITY_HEADERS = {
     "style-src 'self' https://fonts.googleapis.com",
     "font-src https://fonts.gstatic.com",
     "img-src 'self' data: blob:",
+    "media-src 'self' blob:",
     "connect-src 'self'",
     "base-uri 'none'",
     "frame-ancestors 'none'",
@@ -47,6 +49,7 @@ export function createHandler(opts = {}) {
   const submitCode = (opts.submitCode ?? process.env.SUBMIT_CODE ?? '').trim();
   const secret = opts.sessionSecret ?? process.env.SESSION_SECRET ?? createHash('sha256').update(`alain-21:${hostPassword}`).digest('hex');
   const publicDir = opts.publicDir ?? path.join(ROOT, 'public');
+  const videoKey = (opts.videoKey ?? process.env.VIDEO_KEY ?? '').trim();
 
   const sign = (value) => createHmac('sha256', secret).update(value).digest('base64url');
 
@@ -162,6 +165,10 @@ export function createHandler(opts = {}) {
           .sort((a, b) => a.createdAt.localeCompare(b.createdAt))
           .map(({ id, name, message, photos, createdAt }) => ({ id, name, message, photos, createdAt }));
         return send(res, 200, { entries });
+      }
+      if (m === 'GET' && p === '/api/host/film') {
+        // The film is a public static file, but AES-GCM encrypted; only the host gets the key.
+        return send(res, 200, videoKey ? { url: '/film/alain-21.bin', key: videoKey } : { url: null });
       }
       const del = p.match(/^\/api\/host\/entry\/([0-9a-f-]{36})$/);
       if (m === 'DELETE' && del) {

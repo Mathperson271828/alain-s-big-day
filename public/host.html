@@ -45,6 +45,16 @@
 
     <!-- wall -->
     <section id="wallSection" hidden>
+      <div class="wrap about">
+        <p class="eyebrow">What everyone already knows</p>
+        <p class="ticker big-ticker" aria-live="polite">The friend who <span class="swap" id="swap">makes everyone feel seen</span>.</p>
+      </div>
+      <div class="marquee" aria-hidden="true">
+        <div class="track">
+          <span>Duke ECE</span><span>People connector</span><span>Fears God</span><span>Friend of everyone at WU</span><span>Bus-driver bestie</span><span>Professional introducer</span><span>Always the bright side</span><span>Laugh you can hear across the quad</span>
+          <span>Duke ECE</span><span>People connector</span><span>Fears God</span><span>Friend of everyone at WU</span><span>Bus-driver bestie</span><span>Professional introducer</span><span>Always the bright side</span><span>Laugh you can hear across the quad</span>
+        </div>
+      </div>
       <div class="toolbar" role="toolbar" aria-label="Wall controls">
         <div class="wrap toolbar-inner">
           <div class="seg" role="group" aria-label="Show">
@@ -55,6 +65,7 @@
           <div class="tools">
             <button type="button" class="chip" id="shuffle">⤮ Shuffle</button>
             <button type="button" class="chip" id="play">▶ Slideshow</button>
+            <button type="button" class="chip" id="rewatch" hidden>🎬 Your video</button>
           </div>
         </div>
       </div>
@@ -67,6 +78,23 @@
       </div>
     </section>
   </main>
+
+  <!-- the birthday film: shown first, full screen -->
+  <div class="film" id="film" hidden>
+    <video id="filmVideo" playsinline preload="auto"></video>
+    <div class="film-cover" id="filmCover">
+      <p class="eyebrow film-eyebrow">A little something first</p>
+      <p class="film-title">Alain, this one's for you.</p>
+      <button class="btn blue film-btn" id="filmPlay" type="button" disabled><span aria-hidden="true">▶</span> <span id="filmPlayLabel">Loading your video…</span></button>
+      <div class="film-progress" aria-hidden="true"><span id="filmBar"></span></div>
+      <p class="film-hint">Turn your sound up 🔊</p>
+    </div>
+    <button class="film-skip" id="filmSkip" type="button" hidden>Skip →</button>
+    <div class="film-end" id="filmEnd" hidden>
+      <button class="btn film-btn" id="filmOpen" type="button">Open your wall <span aria-hidden="true">→</span></button>
+      <button class="film-again" id="filmAgain" type="button">↺ Watch again</button>
+    </div>
+  </div>
 
   <!-- lightbox -->
   <dialog class="lightbox" id="lightbox" aria-label="Viewer">

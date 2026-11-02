@@ -104,3 +104,17 @@ test('host is locked when no password is configured', async () => {
     assert.equal((await fetch(`${b}/api/host/login`, json({ password: '' }))).status, 401);
   } finally { s.close(); }
 });
+
+test('film key is host-only, and absent when VIDEO_KEY is unset', async () => {
+  const { s, base: b } = await start({ videoKey: 'k3y' });
+  try {
+    assert.equal((await fetch(`${b}/api/host/film`)).status, 401);
+    const cookie = (await fetch(`${b}/api/host/login`, json({ password: 'happy21' }))).headers.get('set-cookie').split(';')[0];
+    assert.deepEqual(await (await fetch(`${b}/api/host/film`, { headers: { cookie } })).json(), { url: '/film/alain-21.bin', key: 'k3y' });
+  } finally { s.close(); }
+  const { s: s2, base: b2 } = await start({ videoKey: '' });
+  try {
+    const cookie = (await fetch(`${b2}/api/host/login`, json({ password: 'happy21' }))).headers.get('set-cookie').split(';')[0];
+    assert.deepEqual(await (await fetch(`${b2}/api/host/film`, { headers: { cookie } })).json(), { url: null });
+  } finally { s2.close(); }
+});
