@@ -49,6 +49,13 @@ If the wall shows "Photo storage is not connected", open **Storage** in Vercel, 
 
 API: `POST /api/photo` (raw image, ≤4 MB, checked by file signature) → `{ref}`; `POST /api/submit` `{name, message, photos[], code?}`; `POST /api/host/login`; `GET /api/host/wall`; `DELETE /api/host/entry/:id`; `GET /media/:name` (host only).
 
+## The birthday film
+
+After logging in, Alain first sees a full-screen birthday video, then an **Open your wall** button.
+The repo is public, so the video is stored **encrypted** at `public/film/alain-21.bin`. The key lives only in Vercel as `VIDEO_KEY`, and the server gives it only to a logged-in host. Without `VIDEO_KEY` the video is skipped.
+
+To replace it: `VIDEO_KEY=<key> node scripts/encrypt-film.js new-film.mp4`, then commit `public/film/alain-21.bin`.
+
 ## Changing settings later
 
 Vercel only applies environment variable changes (like `HOST_PASSWORD` or `SUBMIT_CODE`) to new deploys. After changing one, either push any commit to `main` or click **Deployments → ⋯ → Redeploy** in Vercel.
